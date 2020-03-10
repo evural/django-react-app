@@ -27,6 +27,8 @@ const SignupForm = props => {
             headers: {
                 'Content-Type': 'application/json'
             },
+			credentials: 'include',
+			withCredentials: true,
             body: JSON.stringify(data)
         }).then(function(response) {
 			console.log(response);
@@ -41,8 +43,8 @@ const SignupForm = props => {
             } else if (response.status === 201) {
                 response.json().then(function(object) {
                     console.log(object);
-					//props.on_success_signup(object.user.username);
-		            history.push('/login');
+					props.on_success_login(object.username);
+                    history.push('/');
                 })
             }   
         }); 
@@ -59,7 +61,7 @@ const SignupForm = props => {
 
     return (
 		<form onSubmit={e => handle_signup(e)}>
-          <h4>Log In</h4>
+          <h4>Sign Up</h4>
           <label htmlFor="username">Username</label>
           <input
             type="text"
@@ -93,8 +95,8 @@ const SignupForm = props => {
 	);
 }
 
-/*SignupForm.propTypes = {
-    on_success_signup: PropTypes.func.isRequired
-};*/
+SignupForm.propTypes = {
+    on_success_login: PropTypes.func.isRequired
+};
 
 export default SignupForm;

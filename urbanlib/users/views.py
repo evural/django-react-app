@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import UserSerializer, UserSerializerWithToken
 from rest_framework_jwt.settings import api_settings
+from datetime import datetime
 
 
 @api_view(['GET'])
@@ -26,8 +27,15 @@ def user_list(request):
     if request.method == "POST":
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            user = serializer.save()
+            response = Response(serializer.data, status=status.HTTP_201_CREATED)
+            # Auto login
+            if api_settings.JWT_AUTH_COOKIE:
+                token = get_token(user)
+                expiration = (datetime.utcnow() +
+                              api_settings.JWT_EXPIRATION_DELTA)
+                response.set_cookie(api_settings.JWT_AUTH_COOKIE, token, expires=expiration, httponly=True)
+            return response
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == "GET":
         return Response('success')
