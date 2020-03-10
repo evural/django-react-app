@@ -48,7 +48,7 @@ const App = () => {
 		            <LoginForm on_success_login={on_success_login} />
 		          </Route>
 		          <Route path='/signup'>
-		            <SignupForm />
+		            <SignupForm on_success_login={on_success_login} />
 		          </Route>
 		          <Route exact path='/topic/new'>
 		            <TopicForm />
