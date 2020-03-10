@@ -1,0 +1,11 @@
+*.sqlite3
+
+static/node_modules/
+node_modules/
+
+__pycache__/
+*.pyc
+*.swp
+
+pip-log.txt
+pip-delete-this-directory.txt

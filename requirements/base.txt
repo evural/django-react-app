@@ -1,0 +1,8 @@
+# Django
+# ---------------------------------------------------------------
+Django==3.0.3
+Pillow
+django-allauth
+djangorestframework-jwt
+djangorestframework
+django-cors-headers
