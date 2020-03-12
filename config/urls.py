@@ -21,6 +21,7 @@ from rest_framework_jwt.settings import api_settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('token-auth/', obtain_jwt_token),
     path('accounts/', include('allauth.urls')),
     path('account/', include('allauth.urls')),

@@ -1,6 +1,10 @@
 import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
 import PropTypes from "prop-types";
+import qs from "qs";
+
+import api from '../utils/api';
+import isAuthenticated, { setAuthCookie } from '../utils/me';
 
 const LoginForm = props => {
 	let history = useHistory();
@@ -15,33 +19,27 @@ const LoginForm = props => {
 
     const handle_login = (e) => {
         e.preventDefault();
-		const data = {
-			"username": username,
-			"password": password
-		};
-        fetch('http://localhost:8000/token-auth/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-			credentials: 'include',
-			withCredentials: true,
-            body: JSON.stringify(data)
-        }).then(function(response) {
+		const postData = {
+            grant_type: 'password',
+            username: username,
+            password: password,
+        };
+
+		api.post('/o/token/', JSON.stringify(postData), {
+			auth: {
+				username: 'urbanlibinternal',
+				password: 'urbanlibsecret'
+			}
+		}).then(function(response) {
             if (response.status === 400) {
-                response.json().then(function(object) {
-					handle_unsuccessful_login(object);
-                }) 
+				handle_unsuccessful_login(response.data);
             } else if (response.status === 404) {
-                response.json().then(function(object) {
-                    console.log(object.type, object.message);
-                }) 
+                console.log(response.data);
             } else if (response.status === 200) {
-                response.json().then(function(object) {
-                    console.log(object);
-					props.on_success_login(object.user.username);
-		            history.push('/');
-                })
+                console.log(response);
+				setAuthCookie(response.data.access_token);
+				props.on_success_login(username);
+		        history.push('/');
             }   
         }); 
     };

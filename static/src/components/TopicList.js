@@ -1,20 +1,17 @@
 import React, {useEffect, useState} from "react";
-import axios from "axios";
 import "./sidebar.css";
 import {NavLink} from "react-router-dom";
+import api from '../utils/api'
 
 
 const TopicList = props => {
 
-	const API_URL = 'http://localhost:8000';
-
     const [state, setState] = useState({topics: []});
 
 	useEffect( () => { 
-		const url = `${API_URL}/api/topics/`;
 		const fetchData = async () => {
-		    const result = await axios(url);
-		    console.log(result.data.data);
+		    const result = await api.get('/api/topics/');
+		    console.log(result.data);
 			setState(state => ({
 				...state, 
 				topics: result.data.data

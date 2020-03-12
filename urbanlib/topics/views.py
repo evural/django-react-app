@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
@@ -13,6 +13,7 @@ from .models import Topic
 from .serializers import *
 
 @api_view(['GET', 'POST'])
+@permission_classes([])
 def topics_list(request):
     """List topics, or create a new topic."""
     if request.method == 'GET':
@@ -36,16 +37,9 @@ def topics_list(request):
         return Response({'data': serializer.data, 'count': paginator.count, 'numpages': paginator.num_pages, 'nextlink': '/api/topics/?page=' + str(next_page), 'prevlink': '/api/topics/?page=' + str(prev_page)})
 
     elif request.method == 'POST':
-        print(request.data)
         serializer = TopicSerializer(data=request.data)
         if serializer.is_valid():
-            #token = request.META.get('HTTP_AUTHORIZATION', " ").split(' ')[1]
-            #token = request.META.get('HTTP_AUTHORIZATION', " ")
-            #data = {'token': token}
             try:
-                #valid_data = VerifyJSONWebTokenSerializer().validate(data)
-                #user = valid_data['user']
-                #request.user = user
                 serializer.save(owner=request.user)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except ValidationError as v:
@@ -56,6 +50,7 @@ def topics_list(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([])
 def topics_detail(request, pk):
     """ Retrieve, update, or delete topic by id/pk."""
     try:

@@ -6,3 +6,4 @@ django-allauth
 djangorestframework-jwt
 djangorestframework
 django-cors-headers
+django-oauth-toolkit
