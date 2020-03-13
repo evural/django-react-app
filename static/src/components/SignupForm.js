@@ -1,6 +1,9 @@
 import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
 import PropTypes from "prop-types";
+import api from "../utils/api";
+import isAuthenticated, { setAuthCookie } from '../utils/me';
+import qs from "qs";
 
 const SignupForm = props => {
 	let history = useHistory();
@@ -16,36 +19,32 @@ const SignupForm = props => {
 
     const handle_signup = (e) => {
         e.preventDefault();
-		const data = {
+		//const postData = {
+		const postData = qs.stringify({
 			"username": state.username,
 			"email": state.email,
 			"name": state.name,
 			"password": state.password,
-		};
-        fetch('http://localhost:8000/users/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-			credentials: 'include',
-			withCredentials: true,
-            body: JSON.stringify(data)
-        }).then(function(response) {
+            //"grant_type": 'password',
+		});
+
+		console.log(postData);
+        api.post('/users/', postData, {
+			auth: {
+                username: 'urbanlibinternal',
+                password: 'urbanlibsecret'
+            }
+		}).then(function(response) {
 			console.log(response);
             if (response.status === 400) {
-                response.json().then(function(object) {
-					handle_unsuccessful_signup(object);
-                }) 
+				handle_unsuccessful_signup(response);
             } else if (response.status === 404) {
-                response.json().then(function(object) {
-                    console.log(object.type, object.message);
-                }) 
-            } else if (response.status === 201) {
-                response.json().then(function(object) {
-                    console.log(object);
-					props.on_success_login(object.username);
-                    history.push('/');
-                })
+                console.log(response);
+            } else if (response.status === 200) {
+                console.log(response);
+				setAuthCookie(response.data.access_token);
+				props.on_success_login(state.username);
+                history.push('/');
             }   
         }); 
     };

@@ -5,8 +5,22 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import UserSerializer, UserSerializerWithToken
-from rest_framework_jwt.settings import api_settings
 from datetime import datetime
+
+from oauth2_provider.settings import oauth2_settings
+from braces.views import CsrfExemptMixin
+from oauth2_provider.views.mixins import OAuthLibMixin
+
+import json
+
+from django.utils.decorators import method_decorator
+from django.http import HttpResponse
+from django.views.generic import View
+from django.views.decorators.debug import sensitive_post_parameters
+from django.utils.translation import gettext_lazy as _
+from django.db import transaction
+import traceback
+from oauth2_provider.views import TokenView
 
 
 @api_view(['GET'])
@@ -18,47 +32,33 @@ def current_user(request):
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
 
-@api_view(['POST'])
-def user_list(request):
-    """
-    Create a new user. It's called 'UserList' because normally we'd have a get
-    method here too, for retrieving a list of all User objects.
-    """
-    if request.method == "POST":
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            response = Response(serializer.data, status=status.HTTP_201_CREATED)
-            # Auto login
-            if api_settings.JWT_AUTH_COOKIE:
-                token = get_token(user)
-                expiration = (datetime.utcnow() +
-                              api_settings.JWT_EXPIRATION_DELTA)
-                response.set_cookie(api_settings.JWT_AUTH_COOKIE, token, expires=expiration, httponly=True)
-            return response
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == "GET":
-        return Response('success')
-
-def get_token(obj):
-        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
-
-        payload = jwt_payload_handler(obj)
-        token = jwt_encode_handler(payload)
-        return token
-
-class UserList(APIView):
-    """
-    Create a new user. It's called 'UserList' because normally we'd have a get
-    method here too, for retrieving a list of all User objects.
-    """
-
+class UserList(CsrfExemptMixin, OAuthLibMixin, APIView):
     permission_classes = (permissions.AllowAny,)
 
-    def post(self, request, format=None):
-        serializer = UserSerializerWithToken(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    server_class = oauth2_settings.OAUTH2_SERVER_CLASS
+    validator_class = oauth2_settings.OAUTH2_VALIDATOR_CLASS
+    oauthlib_backend_class = oauth2_settings.OAUTH2_BACKEND_CLASS
+    authentication_classes = []
+
+    def post(self, request, *args, **kwargs):
+        if request.auth is None:
+            # ToDo: This is unnecessary.
+            # I had to add this becase the oauthlib tries to access request body
+            req_body = request.body
+            serializer = UserSerializer(data=request.data)
+            if serializer.is_valid():
+                try:
+                    with transaction.atomic():
+                        user = serializer.save()
+                        url, headers, body, token_status = self.create_token_response(request)
+                        if token_status != 200:
+                            raise Exception(json.loads(body).get("error", ""))
+
+                        return Response(json.loads(body), status=token_status)
+                        #view = TokenView.as_view()
+                        #return view(request, *args, **kwargs)
+                except Exception as e:
+                    traceback.print_exc()
+                    return Response(data={"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_403_FORBIDDEN)

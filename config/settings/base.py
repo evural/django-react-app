@@ -52,6 +52,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'corsheaders',
     'oauth2_provider',
+    'braces',
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
