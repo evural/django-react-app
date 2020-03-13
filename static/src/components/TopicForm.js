@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
-import axios from "axios";
-
+import api from "../utils/api";
 
 const TopicForm = props => {
 
@@ -10,7 +9,6 @@ const TopicForm = props => {
 		topic: "",
 		entry: ""
 	});
-	const API_URL = 'http://localhost:8000';
 
 	const handle_change = e => {
         const value = e.target.value;
@@ -26,8 +24,7 @@ const TopicForm = props => {
 			'text': state.topic,
 			'entry_list': [{'text': state.entry}]
 		}
-        const url = `${API_URL}/api/topics/`;
-        axios.post(url, topic, {
+        api.post('/api/topics', topic, {
 	        headers: {
                'Accept' : 'application/json',
                'Content-Type': 'application/json'

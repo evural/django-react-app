@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from "react";
-import axios from "axios";
 import {useParams} from "react-router-dom";
 import EntryForm from "./EntryForm";
 import "./Topic.css";
 import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
 import {Button} from "react-bootstrap";
+import api from "../utils/api";
 
 const Topic = props => {
 
@@ -12,12 +12,9 @@ const Topic = props => {
 	const [entrySaved, setEntrySaved] = useState(false);
 	let {id} = useParams();
 
-	const API_URL = 'http://localhost:8000';
-
 	useEffect( () => {
-        const url = `${API_URL}/api/topics/${id}`;
         const fetchData = async () => {
-            const result = await axios(url);
+            const result = await api.get(`/api/topics/${id}`);
             setState( state => ({
                 ...state,
                 topic: result.data

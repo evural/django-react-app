@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api";
 
 const EntryForm = props => {
 
@@ -8,7 +8,6 @@ const EntryForm = props => {
 	const [entry, setEntry] = useState({text: ''});
 	const isLoggedIn = props.loggedIn;
 	const topicId = props.topicId;
-	const API_URL = "http://localhost:8000";
 
 	const create_entry = e => {
 		e.preventDefault();
@@ -16,13 +15,11 @@ const EntryForm = props => {
             'text': entry.text,
             'topic_id': topicId
         }
-        const url = `${API_URL}/api/entries/`;
-        axios.post(url, entry_data, {
+        api.post('/api/entries/', entry_data, {
             headers: {
                'Accept' : 'application/json',
                'Content-Type': 'application/json'
             },
-            withCredentials: true
         }).then((response) => {
 			setEntry({
 				...entry,
