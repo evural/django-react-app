@@ -29,7 +29,7 @@ const SignupForm = props => {
 		});
 
 		console.log(postData);
-        api.post('/users/', postData, {
+        api.post('/accounts/', postData, {
 			auth: {
                 username: 'urbanlibinternal',
                 password: 'urbanlibsecret'

@@ -7,6 +7,10 @@ export function setAuthCookie(token) {
     cookies.set(authTokenKey, token, {path: '/'});
 }
 
+export function removeAuthCookie(token) {
+    cookies.remove(authTokenKey, {path: '/'});
+}
+
 export function getAuthToken() {
     return cookies.get(authTokenKey);
 }

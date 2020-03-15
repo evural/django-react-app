@@ -25,7 +25,7 @@ const LoginForm = props => {
             password: password,
         };
 
-		api.post('/o/token/', JSON.stringify(postData), {
+		api.post('/accounts/login/', JSON.stringify(postData), {
 			auth: {
 				username: 'urbanlibinternal',
 				password: 'urbanlibsecret'
@@ -37,8 +37,9 @@ const LoginForm = props => {
                 console.log(response.data);
             } else if (response.status === 200) {
                 console.log(response);
+				console.log(response.data.member.username);
 				setAuthCookie(response.data.access_token);
-				props.on_success_login(username);
+				props.on_success_login(response.data.member.username);
 		        history.push('/');
             }   
         }); 

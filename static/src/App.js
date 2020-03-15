@@ -30,6 +30,7 @@ const App = () => {
 	};
 
 	const on_success_logout = () => {
+        localStorage.removeItem('username');
 		setLoggedIn(false);
 	};
 

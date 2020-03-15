@@ -15,17 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
-from rest_framework_jwt.settings import api_settings
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-    path('token-auth/', obtain_jwt_token),
-    path('accounts/', include('allauth.urls')),
-    path('account/', include('allauth.urls')),
-    path('users/', include('urbanlib.users.urls'), name='users'),
+    path('accounts/', include('urbanlib.users.urls'), name='accounts'),
     path('api/topics/', include('urbanlib.topics.urls'), name='topics'),
     path('api/entries/', include('urbanlib.entries.urls'), name='entries'),
 ]

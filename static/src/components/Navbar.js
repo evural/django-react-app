@@ -3,18 +3,38 @@ import {Link, useHistory} from "react-router-dom";
 import PropTypes from "prop-types";
 import Search from "./Search";
 import {Button} from "react-bootstrap";
-import './navbar.css'
+import './navbar.css';
+import { getAuthToken, removeAuthCookie } from '../utils/me';
+import api from '../utils/api';
 
 const Navbar = props => {
 	let history = useHistory();
 
 	const handle_logout = e => {
 		e.preventDefault();
-        localStorage.removeItem('username');
-        localStorage.removeItem('token');
-		props.on_success_logout();
-		history.push('/');
-	}
+		const token = getAuthToken();
+        const postData = {
+            token: token
+        };
+
+        api.post('/o/revoke_token/', JSON.stringify(postData), {
+            auth: {
+                username: 'urbanlibinternal',
+                password: 'urbanlibsecret'
+            }
+        }).then(function(response) {
+            if (response.status === 400) {
+				console.log(response);
+            } else if (response.status === 404) {
+                console.log(response);
+            } else if (response.status === 200) {
+                console.log(response);
+                removeAuthCookie(response.data.access_token);
+		        props.on_success_logout();
+                history.push('/');
+            }
+        });
+    };
 
     const logged_out_nav = (
         <ul className='list-unstyled'>
