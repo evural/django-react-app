@@ -22,7 +22,6 @@ const Topic = props => {
 			console.log(result.data);
         };
         fetchData()
-		console.log(state);
     }, [id, entrySaved]);
 
 	const entry_saved_callback = () => {
