@@ -1,3 +1,11 @@
 nav.navbar.navbar-expand-lg {
     border-bottom: 1px solid #4A8DA0;
 }
+
+ul.list-unstyled li {
+    display: inline;
+	padding: 5px;
+}
+ul.list-unstyled li button {
+	margin-top: -4px;
+}

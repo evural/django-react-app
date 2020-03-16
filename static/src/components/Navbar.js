@@ -50,6 +50,9 @@ const Navbar = props => {
     const logged_in_nav = (
         <ul className='list-unstyled'>
 		  <li>
+            <Link to="/me">me</Link>
+		  </li>
+		  <li>
             <Link to="/topic/new">Create Topic</Link>
 		  </li>
 		  <li>
