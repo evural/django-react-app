@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
 import PropTypes from "prop-types";
 import qs from "qs";
+import Form from 'react-bootstrap/Form';
 
 import api from '../utils/api';
 import isAuthenticated, { setAuthCookie } from '../utils/me';
@@ -57,24 +58,28 @@ const LoginForm = props => {
 	};
 
     return (
-		<form onSubmit={e => handle_login(e)}>
-          <h4>Log In</h4>
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            name="username"
-            value={username}
-            onChange={handle_change}
-          />
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={handle_change}
-          />
-          <input type="submit" />
-        </form>
+		<Form onSubmit={e => handle_login(e)}>
+          <Form.Group controlId="formBasicUsername">
+            <Form.Label>Username</Form.Label>
+            <Form.Control 
+		      type="text" 
+		      placeholder="Enter username"
+		      name="username"
+              value={username}
+              onChange={handle_change} />
+          </Form.Group>
+
+          <Form.Group controlId="formBasicPassword">
+            <Form.Label>Password</Form.Label>
+            <Form.Control 
+		      type="password" 
+		      placeholder="Password"
+		      name="password"
+              value={password}
+              onChange={handle_change}/>
+          </Form.Group>
+            <input type="submit" />
+          </Form>
 	);
 }
 

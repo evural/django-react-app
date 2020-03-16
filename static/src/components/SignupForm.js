@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import api from "../utils/api";
 import isAuthenticated, { setAuthCookie } from '../utils/me';
 import qs from "qs";
+import Form from 'react-bootstrap/Form';
+import { Col } from 'react-bootstrap';
 
 const SignupForm = props => {
 	let history = useHistory();
@@ -19,16 +21,14 @@ const SignupForm = props => {
 
     const handle_signup = (e) => {
         e.preventDefault();
-		//const postData = {
-		const postData = qs.stringify({
+		const postData = {
 			"username": state.username,
 			"email": state.email,
 			"name": state.name,
 			"password": state.password,
-            //"grant_type": 'password',
-		});
+            "grant_type": 'password'
+		};
 
-		console.log(postData);
         api.post('/accounts/', postData, {
 			auth: {
                 username: 'urbanlibinternal',
@@ -59,38 +59,49 @@ const SignupForm = props => {
     }
 
     return (
-		<form onSubmit={e => handle_signup(e)}>
-          <h4>Sign Up</h4>
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            name="username"
-            value={state.username}
-            onChange={handle_change}
-          />
-          <label htmlFor="email">Email</label>
-          <input
-            type="text"
-            name="email"
-            value={state.email}
-            onChange={handle_change}
-          />
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={state.name}
-            onChange={handle_change}
-          />
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={state.password}
-            onChange={handle_change}
-          />
+		<Form onSubmit={e => handle_signup(e)}>
+          <Form.Row>
+            <Form.Group as={Col} controlId="formGridEmail">
+              <Form.Label>Email</Form.Label>
+              <Form.Control 
+		        type="email" 
+		        placeholder="Enter email"
+		        name="email"
+                value={state.email}
+                onChange={handle_change} />
+            </Form.Group>
+            <Form.Group as={Col} controlId="formGridUsername">
+              <Form.Label>Username</Form.Label>
+              <Form.Control 
+		        type="text" 
+		        placeholder="Enter username"
+		        name="username"
+                value={state.username}
+                onChange={handle_change}/>
+            </Form.Group>
+          </Form.Row>
+          <Form.Row>
+            <Form.Group as={Col} controlId="formGridName">
+              <Form.Label>Name</Form.Label>
+              <Form.Control 
+		        type="text" 
+		        placeholder="Name" 
+		        name="name"
+                value={state.name}
+                onChange={handle_change} />
+            </Form.Group>
+            <Form.Group as={Col} controlId="formGridPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control 
+		        type="password" 
+		        placeholder="Password"
+		        name="password"
+                value={state.password}
+                onChange={handle_change} />
+            </Form.Group>
+          </Form.Row>
           <input type="submit" />
-        </form>
+        </Form>
 	);
 }
 

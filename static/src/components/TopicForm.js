@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
 import api from "../utils/api";
+import Form from 'react-bootstrap/Form';
 
 const TopicForm = props => {
 
@@ -24,12 +25,11 @@ const TopicForm = props => {
 			'text': state.topic,
 			'entry_list': [{'text': state.entry}]
 		}
-        api.post('/api/topics', topic, {
+        api.post('/api/topics/', topic, {
 	        headers: {
                'Accept' : 'application/json',
                'Content-Type': 'application/json'
             },
-			withCredentials: true
         }).then((response) => {
 			history.push(`/topic/${response.data.pk}`);
         }, (error) => {
@@ -38,26 +38,23 @@ const TopicForm = props => {
 	}
 
 	return (
-		<form onSubmit={e => create_topic(e)}>
-          <h4>Create Topic</h4>
-		  <label htmlFor="topic">Topic</label>
-		  <input
-              type="text"
-              name="topic"
+		<Form onSubmit={e => create_topic(e)}>
+		  <Form.Group controlId="topicForm">
+            <Form.Label>Topic</Form.Label>
+		    <Form.Control 
+		      type="text" 
+		      placeholder="Topic"
+		      name="topic"
               value={state.topic}
-              onChange={handle_change}
-          />
-	  	  <label htmlFor="entry">Entry</label>
-          <textarea
-            className="form-control"
-            name="entry"
-		    value={state.entry}
-		    onChange={handle_change}
-		    maxLength={5000}
-            rows="5"
-          />
+              onChange={handle_change} />
+            <Form.Label>Entry</Form.Label>
+            <Form.Control as="textarea" rows="5"
+		      name="entry"
+              value={state.entry}
+              onChange={handle_change}/>
+          </Form.Group>
 		  <input type="submit" />
-		</form>
+		</Form>
 	);
 
 }
