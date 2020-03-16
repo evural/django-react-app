@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import TopicForm from "./components/TopicForm";
 import TopicList from "./components/TopicList";
 import Topic from "./components/Topic";
+import Profile from "./components/Profile";
 import Home from "./pages/Home";
 import "./index.css"
 
@@ -56,6 +57,9 @@ const App = () => {
 		          </Route>
 		          <Route path='/topic/:id'>
 		            <Topic logged_in={loggedIn} />
+		          </Route>
+		          <Route path='/me'>
+		            <Profile />
 		          </Route>
 		        </Switch>
 		      </div>
