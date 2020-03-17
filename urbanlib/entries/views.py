@@ -14,9 +14,7 @@ from django.http import Http404
 @permission_classes([])
 def entry_list(request):
     """List entries or create a new entry under a topic"""
-    if request.method == "GET":
-        return Response("Success")
-    elif request.method == "POST":
+    if request.method == "POST":
         serializer = EntryWriteSerializer(data=request.data)
         if serializer.is_valid():
             try:
