@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from .models import Topic
 from urbanlib.entries.models import Entry 
-from urbanlib.entries.serializers import EntryReadSerializer 
+from urbanlib.entries.serializers import EntryListSerializer 
 
 class TopicSerializer(serializers.ModelSerializer):
 
-    entry_list = EntryReadSerializer(many=True)
+    entry_list = EntryListSerializer(many=True)
 
     class Meta:
         model = Topic
