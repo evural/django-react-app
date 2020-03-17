@@ -10,14 +10,12 @@ class TopicReferenceSerializer(serializers.ModelSerializer):
 
 class EntryWriteSerializer(serializers.ModelSerializer):
 
-    topic_id = serializers.PrimaryKeyRelatedField(
-        source='topic',
+    topic = serializers.PrimaryKeyRelatedField(
         queryset=Topic.objects.all()
     )
-    topic = TopicReferenceSerializer(read_only=True)
     class Meta:
         model = Entry
-        fields = ('pk', 'text', 'topic_id', 'topic',)
+        fields = ('pk', 'text', 'topic',)
 
 class EntryReadSerializer(serializers.ModelSerializer):
 

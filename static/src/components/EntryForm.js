@@ -13,7 +13,7 @@ const EntryForm = props => {
 		e.preventDefault();
 		const entry_data = {
             'text': entry.text,
-            'topic_id': topicId
+            'topic': topicId
         }
         api.post('/api/entries/', entry_data, {
             headers: {
