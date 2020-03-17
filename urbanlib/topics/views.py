@@ -36,7 +36,7 @@ class TopicList(APIView, PaginationHandlerMixin):
         """
         Create a topic with an initial entry
         """
-        serializer = TopicSerializer(data=request.data)
+        serializer = TopicWriteSerializer(data=request.data)
         if serializer.is_valid():
             try:
                 serializer.save(owner=request.user)
@@ -61,11 +61,11 @@ def topics_detail(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = TopicSerializer(topic, context={'request':request})
+        serializer = TopicReadSerializer(topic, context={'request':request})
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = TopicSerializer(topic, data=request.data, context={'request': request})
+        serializer = TopicWriteSerializer(topic, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
