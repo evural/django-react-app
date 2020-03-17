@@ -38,6 +38,11 @@ const Profile = props => {
             },
         }).then((response) => {
 			console.log(response)
+			const currentEntries = state.entries
+            setState( state => ({
+                ...state,
+                entries: currentEntries.filter(entry => entry.pk !== entryId),
+            }));
         }, (error) => {
             console.log(error);
         });
