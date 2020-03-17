@@ -8,6 +8,25 @@ from rest_framework import permissions
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
 from .models import Entry
 from django.http import Http404
+from urbanlib.permissions import IsAuthenticatedOrReadOnly
+from urbanlib.pagination import PaginationHandlerMixin, BasicPagination
+
+class EntryList(PaginationHandlerMixin, APIView):
+    serializer_class = EntryWriteSerializer
+    pagination_class = BasicPagination
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def post(self, request, format=None):
+        serializer = serializer_class(data=request.data)
+        if serializer.is_valid():
+            try:
+                serializer.save(author=request.user)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except ValidationError as v:
+                print("validation error", v)
+            except Exception as e:
+                print(e)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'POST'])
 #@permission_classes([IsAuthenticated, TokenHasReadWriteScope])
