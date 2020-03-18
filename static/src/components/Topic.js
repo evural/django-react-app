@@ -1,31 +1,65 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useReducer} from "react";
 import {useParams} from "react-router-dom";
 import EntryForm from "./EntryForm";
 import "./Topic.css";
 import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
 import {Button} from "react-bootstrap";
 import api from "../utils/api";
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+
+function reducer(state, action) {
+    switch (action.type) {
+        case 'init':
+            return {
+				topic: action.payload,
+				page: 1,
+				limit: 10
+            };
+        case 'nextPage':
+            return {
+                topic: action.payload,
+                page: state.page+1,
+                limit: 10
+            };
+        case 'prevPage':
+            return {
+                topic: action.payload,
+                page: state.page-1,
+                limit: 10
+            };
+        default:
+            return state;
+    }
+}
 
 const Topic = props => {
 
-	const [state, setState] = useState({topic:{text: '', entry_list:[]}});
+	const [state, dispatch] = useReducer(reducer, {topic:{text: '', entry_list:[]}, page:1, limit:10});
 	const [entrySaved, setEntrySaved] = useState(false);
 	let {id} = useParams();
 
 	useEffect( () => {
-        const fetchData = async () => {
-            const result = await api.get(`/api/topics/${id}`);
-            setState( state => ({
-                ...state,
-                topic: result.data
-            }));
-			console.log(result.data);
-        };
-        fetchData()
+        fetchData(10, 1, "init");
     }, [id, entrySaved]);
+
+    const fetchData = async (limit, page, type) => {
+        const response = await api.get(`/api/topics/${id}?limit=${limit}&page=${page}`);
+		dispatch({ type: type, payload: response.data });
+    };
 
 	const entry_saved_callback = () => {
 		setEntrySaved(!entrySaved);
+	};
+
+    const changePage = (e, direction) => {
+		e.preventDefault();
+        if (direction == "prev"){
+            if (state.page > 1){
+                fetchData(state.limit-1, state.page-1, "prevPage");
+            }
+        }else if (direction == "next"){
+            fetchData(state.limit+1, state.page+1, "nextPage");
+        }
 	};
 
 	return (
@@ -52,6 +86,18 @@ const Topic = props => {
 			  </li>
             ))}
           </ul>
+		  <div className="entry-footer row">
+            <div className="feedback col-sm-4">
+              <Button variant="outline-secondary" size="sm" onClick={e => changePage(e, "prev")}>
+                <FaChevronLeft />
+              </Button>
+		    </div>
+            <div className="feedback col-sm-4">
+              <Button variant="outline-secondary" size="sm" onClick={e => changePage(e, "next")}>
+                <FaChevronRight />
+              </Button>
+            </div>
+          </div>
 		  <EntryForm loggedIn={props.logged_in} topicId={id} callback={entry_saved_callback}/>
 		</div>
 	);

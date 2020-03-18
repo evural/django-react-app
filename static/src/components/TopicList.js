@@ -37,7 +37,6 @@ function reducer(state, action) {
 
 const TopicList = props => {
 
-	//const [state, setState] = useState({topics: [], page:1, limit:10, count:0});
     const [state, dispatch] = useReducer(reducer, {topics: [], page:1, limit:10, count:0});
 	useEffect( () => { 
 		fetchData(state.limit, state.page, "init");
@@ -45,7 +44,7 @@ const TopicList = props => {
 
 	const fetchData = async (limit, page, type) => {
 		const response = await api.get(`/api/topics?limit=${limit}&page=${page}`);
-		dispatch({ type: type, payload: response.data })
+		dispatch({ type: type, payload: response.data });
 	};
 	const changePage = (e, direction) => {
 		e.preventDefault();
