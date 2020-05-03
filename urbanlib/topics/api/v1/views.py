@@ -10,8 +10,8 @@ from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 from rest_framework_jwt.utils import jwt_get_user_id_from_payload_handler
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import Topic
-from .serializers import *
+from urbanlib.topics.models import Topic
+from urbanlib.topics.api.v1.serializers import *
 from urbanlib.pagination import PaginationHandlerMixin, BasicPagination
 from rest_framework import permissions
 from urbanlib.permissions import IsAuthenticatedOrReadOnly

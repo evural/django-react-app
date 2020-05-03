@@ -25,7 +25,7 @@ const TopicForm = props => {
 			'text': state.topic,
 			'entry_list': [{'text': state.entry}]
 		}
-        api.post('/api/topics/', topic, {
+        api.post('/api/v1/topics/', topic, {
 	        headers: {
                'Accept' : 'application/json',
                'Content-Type': 'application/json'

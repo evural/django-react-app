@@ -17,7 +17,7 @@ const Profile = props => {
             }));
         };
 		const fetchEntries = async () => {
-            const result = await api.get('/api/entries/me');
+            const result = await api.get('/api/v1/entries/me');
 			console.log(result.data);
             setState( state => ({
                 ...state,
@@ -31,7 +31,7 @@ const Profile = props => {
 	const deleteEntry = (e, entryId) => {
 		e.preventDefault();
 		console.log("delete entry: " + entryId);
-		api.delete(`/api/entries/${entryId}`, {
+		api.delete(`/api/v1/entries/${entryId}`, {
             headers: {
                'Accept' : 'application/json',
                'Content-Type': 'application/json'

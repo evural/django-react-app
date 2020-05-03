@@ -3,10 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import EntryReadSerializer, EntryWriteSerializer
+from urbanlib.entries.api.v1.serializers import EntryReadSerializer, EntryWriteSerializer
 from rest_framework import permissions
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
-from .models import Entry
+from urbanlib.entries.models import Entry
 from django.http import Http404
 from urbanlib.permissions import IsAuthenticatedOrReadOnly
 from urbanlib.pagination import PaginationHandlerMixin, BasicPagination

@@ -43,7 +43,7 @@ const Topic = props => {
     }, [id, entrySaved]);
 
     const fetchData = async (limit, page, type) => {
-        const response = await api.get(`/api/topics/${id}?limit=${limit}&page=${page}`);
+        const response = await api.get(`/api/v1/topics/${id}?limit=${limit}&page=${page}`);
 		dispatch({ type: type, payload: response.data });
     };
 
