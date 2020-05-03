@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Entry
+from urbanlib.entries.models import Entry
 from urbanlib.topics.models import Topic
 
 class TopicReferenceSerializer(serializers.ModelSerializer):

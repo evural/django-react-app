@@ -15,12 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from urbanlib.topics.api.v1.urls import topics_urls
+from urbanlib.entries.api.v1.urls import entries_urls
 
+api_urls = [
+    path('topics/', include(topics_urls), name='topics'),
+    path('entries/', include(entries_urls), name='entries'),
+]
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('accounts/', include('urbanlib.users.urls'), name='accounts'),
-    path('api/topics/', include('urbanlib.topics.urls'), name='topics'),
-    path('api/entries/', include('urbanlib.entries.urls'), name='entries'),
+    path('api/v1/', include(api_urls)),
 ]

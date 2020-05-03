@@ -15,7 +15,7 @@ const EntryForm = props => {
             'text': entry.text,
             'topic': topicId
         }
-        api.post('/api/entries/', entry_data, {
+        api.post('/api/v1/entries/', entry_data, {
             headers: {
                'Accept' : 'application/json',
                'Content-Type': 'application/json'

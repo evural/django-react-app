@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import Topic
+from urbanlib.topics.models import Topic
 from urbanlib.entries.models import Entry 
-from urbanlib.entries.serializers import EntryListSerializer 
+from urbanlib.entries.api.v1.serializers import EntryListSerializer 
 from django.core.paginator import Paginator, EmptyPage
 
 class TopicWriteSerializer(serializers.ModelSerializer):
